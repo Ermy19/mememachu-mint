@@ -7,18 +7,6 @@ import { ethers } from "ethers";
 import { useState } from "react";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/constants";
 
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-      on: (eventName: string, handler: (params: unknown) => void) => void;
-      removeListener: (eventName: string, handler: (params: unknown) => void) => void;
-      isMetaMask?: boolean;
-      isConnected: () => boolean;
-    } & { [key: string]: any };
-  }
-}
-
 export default function Home() {
   const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
