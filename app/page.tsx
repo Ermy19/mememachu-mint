@@ -9,7 +9,13 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/constants";
 
 declare global {
   interface Window {
-    ethereum?: any;
+    ethereum?: {
+      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+      on: (eventName: string, handler: (params: unknown) => void) => void;
+      removeListener: (eventName: string, handler: (params: unknown) => void) => void;
+      isMetaMask?: boolean;
+      isConnected: () => boolean;
+    } & { [key: string]: any };
   }
 }
 
@@ -45,6 +51,7 @@ export default function Home() {
         return;
       }
 
+      if (!window.ethereum) throw new Error("No ethereum provider found");
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
