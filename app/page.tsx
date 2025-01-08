@@ -80,7 +80,7 @@ export default function Home() {
                   disabled={!address || loading}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold"
                 >
-                  {loading ? "Minting..." : "Mint NFT (0.01 ETH)"}
+                  {loading ? "Minting..." : "Mint NFT (0 ETH)"}
                 </Button>
               </div>
             </div>
