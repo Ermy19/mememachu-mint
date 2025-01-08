@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Mememachu is ERC721, Ownable {
     uint256 private _nextTokenId;
-    uint256 public MINT_PRICE = 0.00 ether;
+    uint256 public MINT_PRICE = 0.001 ether;
     uint256 public MAX_SUPPLY = 1000;
 
     constructor() ERC721("Mememachu", "PIKA") Ownable(msg.sender) {}
