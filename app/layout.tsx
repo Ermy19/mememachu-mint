@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "./providers";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
-import { type ReactNode } from '@rainbow-me/rainbowkit/node_modules/@types/react';
+//import { type ReactNode } from '@rainbow-me/rainbowkit/node_modules/@types/react';
+import { type ReactNode } from 'react';
 
 interface RootLayoutProps {
   children: ReactNode
