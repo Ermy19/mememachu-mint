@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "./providers";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
@@ -7,7 +6,7 @@ import "./globals.css";
 import { type ReactNode } from 'react';
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const metadata: Metadata = {
