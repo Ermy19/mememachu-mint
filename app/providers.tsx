@@ -11,7 +11,7 @@ import { mainnet, sepolia } from 'wagmi/chains';
 
 const config = getDefaultConfig({
   appName: 'Mememachu',
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || '',
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || 'b005698208fb7e09ee6f116403ea36cc',
   chains: [mainnet, sepolia],
 });
 
