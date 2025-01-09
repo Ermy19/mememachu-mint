@@ -2,115 +2,86 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-//import { Input } from "@/components/ui/input"
-import { ethers } from "ethers";
 import { useState } from "react";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/constants";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useDisconnect, useWriteContract, useSimulateContract } from 'wagmi';
 
-export default function Home() {
-  const [address, setAddress] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  
-  const connectWallet = async () => {
-    try {
-      if (window.ethereum == null) {
-        alert("Please install MetaMask!");
-        return;
-      }
+const WalletSection = () => {
+  const { address, isConnected } = useAccount();
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-      setAddress(address);
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-    }
-  };
+  const { data: simulateData } = useSimulateContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: 'mint',
+    value: BigInt(0),
+  });
 
-  const disconnectWallet = () => {
-    setAddress("");
-  };
+  const { writeContract, isPending, isSuccess } = useWriteContract();
 
-  const mintNFT = async () => {
-    try {
-      setLoading(true);
-      if (!address) {
-        alert("Please connect your wallet first!");
-        return;
-      }
-
-      if (!window.ethereum) throw new Error("No ethereum provider found");
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-      const mintPrice = await contract.MINT_PRICE();
-      const tx = await contract.mint({ value: mintPrice });
-      await tx.wait();
-      
-      alert("NFT minted successfully!");
-    } catch (error) {
-      console.error("Error minting NFT:", error);
-      alert("Error minting NFT. Please try again.");
-    } finally {
-      setLoading(false);
+  const handleMint = () => {
+    if (simulateData?.request) {
+      writeContract(simulateData.request);
     }
   };
 
   return (
-    <>
-      <div 
-        className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('/background.jpg')`,
-        }}
-      >
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 flex flex-col items-center">
-          <a href="https://imgflip.com/i/53qlhw" target="_blank" rel="noopener noreferrer">
-            <Image src="/mememachu.png" alt="Mememachu Logo" width={100} height={100} className="mb-4" />
-          </a>
-          <h1 className="text-4xl font-bold mb-8 text-white">Mememachu</h1>
+    <div className="flex flex-col items-center gap-4 w-full max-w-sm">
+      {isConnected ? (
+        <>
+          <Button 
+            onClick={handleMint}
+            disabled={!simulateData?.request || isPending}
+            className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-3"
+          >
+            {isPending ? 'Minting...' : isSuccess ? 'Minted 1 MEMEMACHU for 0 ETH!' : 'Mint MEMEMACHU for 0 ETH'}
+          </Button>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            <div className="px-8 py-12 bg-yellow-400 rounded-xl flex items-center justify-center text-lg font-medium">
-              <div className="flex flex-col items-center justify-center space-y-4">
-                <Button 
-                  onClick={mintNFT} 
-                  disabled={!address || loading}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold"
-                >
-                  {loading ? "Minting..." : "Mint NFT (0 ETH)"}
-                </Button>
-              </div>
-            </div>
-            <div className="px-8 py-12 bg-yellow-400 rounded-xl flex items-center justify-center text-lg font-medium">
-              <div className="flex flex-col space-y-4">
-                {address ? (
-                  <>
-                    <p className="text-center text-sm">
-                      {`${address.slice(0,6)}...${address.slice(-4)}`}
-                    </p>
-                    <Button 
-                      onClick={disconnectWallet}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold"
-                    >
-                      Disconnect Wallet
-                    </Button>
-                  </>
-                ) : (
-                  <Button 
-                    onClick={connectWallet}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold"
-                  >
-                    Connect Wallet
-                  </Button>
-                )}
-              </div>
-            </div>
+          <ConnectButton />
+        </>
+      ) : (
+        <div className="w-full flex justify-center">
+          <ConnectButton />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat relative"
+      style={{
+        backgroundImage: `url('/background.jpg')`,
+      }}
+    >
+      <div className="absolute inset-0 bg-black/50" />
+      
+      <div className="relative z-10 container mx-auto px-4 py-8">
+        <div className="flex flex-col items-center max-w-2xl mx-auto">
+          <a href="https://imgflip.com/i/53qlhw" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             className="mb-6 transform hover:scale-105 transition-transform"
+          >
+            <Image 
+              src="/mememachu.png" 
+              alt="Mememachu Logo" 
+              width={120} 
+              height={120} 
+              className="shadow-lg"
+            />
+          </a>
+          
+          <h1 className="text-5xl font-bold mb-12 text-white text-center">
+            Mememachu
+          </h1>
+
+          <div className="w-full max-w-md bg-yellow-400/90 rounded-2xl shadow-xl p-8">
+            <WalletSection />
           </div>
         </div>
       </div>
-    </>
+    </main>
   );
 }
