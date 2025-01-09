@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "./providers";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
+import { type ReactNode } from '@rainbow-me/rainbowkit/node_modules/@types/react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: ReactNode;
+}) {
   return (
     <html lang="en">
       <body
