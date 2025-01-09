@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import * as React from 'react';
 import type { ReactNode } from 'react';
 //import type { ReactNode } from '@rainbow-me/rainbowkit/node_modules/@types/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,8 +15,12 @@ const config = getDefaultConfig({
   chains: [mainnet, sepolia],
 });
 
+interface ProvidersProps {
+  children: React.ReactNode;
+}
+
 const queryClient = new QueryClient();
-export function Providers({ children }: { children: ReactNode }) {
+export function Providers({ children }: { children: ProvidersProps }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

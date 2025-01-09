@@ -7,7 +7,7 @@ import "./globals.css";
 import { type ReactNode } from 'react';
 
 interface RootLayoutProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 export const metadata: Metadata = {
